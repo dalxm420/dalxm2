@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin · ItzDalxm's vouches</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+{% if not logged_in %}
+
+  <div class="panel">
+    <div class="panel-card">
+      <h2>Admin login</h2>
+      <form method="POST" action="{{ url_for('admin_login') }}">
+        <label for="password">Passphrase</label>
+        <input type="password" id="password" name="password" autofocus>
+        {% if error %}
+          <div class="error-msg">{{ error }}</div>
+        {% endif %}
+        <button class="btn btn-primary" type="submit">Log in</button>
+      </form>
+    </div>
+  </div>
+
+{% else %}
+
+  <div class="admin-wrap">
+    <div class="admin-head">
+      <h1>Add a vouch</h1>
+      <form method="POST" action="{{ url_for('admin_logout') }}">
+        <button class="btn btn-ghost" type="submit">Log out</button>
+      </form>
+    </div>
+
+    <form class="admin-form" method="POST" action="{{ url_for('admin_add') }}">
+      <label for="category">Category</label>
+      <select id="category" name="category">
+        {% for cat in categories %}
+          <option value="{{ cat.key }}">{{ cat.label }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="text">Vouch text</label>
+      <textarea id="text" name="text" placeholder="Write the vouch..."></textarea>
+
+      <label for="author">From (optional)</label>
+      <input type="text" id="author" name="author" placeholder="e.g. a Discord username">
+
+      <button class="btn btn-primary" type="submit">Post vouch</button>
+    </form>
+
+    {% for cat in categories %}
+      <div class="admin-section-title">{{ cat.label }} <span style="color:var(--muted); font-style:normal; font-size:0.8rem;">({{ data.get(cat.key, []) | length }})</span></div>
+
+      <div class="vouch-list">
+        {% for v in data.get(cat.key, []) %}
+          <div class="vouch">
+            <p class="vouch-text">{{ v.text }}</p>
+            <div class="vouch-meta">
+              <span>{{ v.author }} · {{ v.date }}</span>
+              <form method="POST" action="{{ url_for('admin_delete', category=cat.key, vouch_id=v.id) }}">
+                <button class="btn-danger" type="submit">Delete</button>
+              </form>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if not data.get(cat.key) %}
+        <div class="empty">Nothing here yet.</div>
+      {% endif %}
+    {% endfor %}
+
+    <div class="admin-section-title" style="margin-top:50px;">Add a video</div>
+    <form class="admin-form" method="POST" action="{{ url_for('admin_add_video') }}">
+      <label for="youtube_url">YouTube link</label>
+      <input type="text" id="youtube_url" name="youtube_url" placeholder="https://www.youtube.com/watch?v=...">
+
+      <label for="video_title">Title</label>
+      <input type="text" id="video_title" name="title" placeholder="What's the clip?">
+
+      <label for="video_author">From (optional)</label>
+      <input type="text" id="video_author" name="author" placeholder="e.g. a Discord username">
+
+      <button class="btn btn-primary" type="submit">Add video</button>
+    </form>
+
+    <div class="admin-section-title">Videos <span style="color:var(--muted); font-style:normal; font-size:0.8rem;">({{ data.get('videos', []) | length }})</span></div>
+    <div class="vouch-list">
+      {% for v in data.get('videos', []) %}
+        <div class="vouch">
+          <p class="vouch-text">{{ v.title }}</p>
+          <div class="vouch-meta">
+            <span>{{ v.author }} · {{ v.date }}</span>
+            <form method="POST" action="{{ url_for('admin_delete_video', entry_id=v.id) }}">
+              <button class="btn-danger" type="submit">Delete</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    {% if not data.get('videos') %}
+      <div class="empty">Nothing here yet.</div>
+    {% endif %}
+
+    <div class="admin-section-title" style="margin-top:50px;">Upload a schematic</div>
+    <form class="admin-form" method="POST" action="{{ url_for('admin_add_schematic') }}" enctype="multipart/form-data">
+      <label for="schematic_file">File (.schem, .schematic, .litematic, .nbt — 25MB max)</label>
+      <input type="file" id="schematic_file" name="schematic_file" accept=".schem,.schematic,.litematic,.nbt">
+
+      <label for="description">Description (optional)</label>
+      <textarea id="description" name="description" placeholder="What is it?"></textarea>
+
+      <label for="schem_author">From (optional)</label>
+      <input type="text" id="schem_author" name="author" placeholder="e.g. a Discord username">
+
+      <button class="btn btn-primary" type="submit">Upload schematic</button>
+    </form>
+
+    <div class="admin-section-title">Schematics <span style="color:var(--muted); font-style:normal; font-size:0.8rem;">({{ data.get('schematics', []) | length }})</span></div>
+    <div class="vouch-list">
+      {% for s in data.get('schematics', []) %}
+        <div class="vouch">
+          <p class="vouch-text">{{ s.original_name }}{% if s.description %} — {{ s.description }}{% endif %}</p>
+          <div class="vouch-meta">
+            <span>{{ s.author }} · {{ s.size }} · {{ s.date }}</span>
+            <form method="POST" action="{{ url_for('admin_delete_schematic', entry_id=s.id) }}">
+              <button class="btn-danger" type="submit">Delete</button>
+            </form>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    {% if not data.get('schematics') %}
+      <div class="empty">Nothing here yet.</div>
+    {% endif %}
+  </div>
+
+{% endif %}
+
+</body>
+</html>

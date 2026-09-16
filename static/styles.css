@@ -1,0 +1,354 @@
+:root{
+  --bg: #0d0b0a;
+  --bg-glow: #ffffff;
+  --ink: #f5efe6;
+  --muted: #a79683;
+  --accent: #e0923f;
+  --accent-soft: rgba(224,146,63,0.14);
+  --card: #17130f;
+  --card-border: #2b2119;
+  --danger: #ef7a7a;
+}
+
+*{ box-sizing: border-box; }
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(60% 45% at 72% 8%, var(--bg-glow) 0%, transparent 60%),
+    var(--bg);
+  color: var(--ink);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------- Hero ---------- */
+
+.hero{
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 100px 24px 60px;
+  text-align: center;
+}
+
+h1{
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  line-height: 1.08;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+h1 em{
+  color: var(--accent);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.subtitle{
+  margin: 24px auto 0;
+  max-width: 480px;
+  color: var(--muted);
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+
+.stats{
+  margin-top: 36px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.stat{
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  border: 1px solid var(--card-border);
+  border-radius: 100px;
+  background: rgba(255,255,255,0.02);
+}
+
+.dot{ width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+
+/* ---------- Tabs ---------- */
+
+main{ max-width: 720px; margin: 0 auto; padding: 0 24px 100px; }
+
+.tabs{
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--card-border);
+  margin-bottom: 26px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar{ display: none; }
+
+.tab{
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 500;
+  padding: 12px 4px;
+  margin-right: 22px;
+  cursor: pointer;
+  position: relative;
+  top: 1px;
+  border-bottom: 2px solid transparent;
+}
+
+.tab.active{
+  color: var(--ink);
+  border-bottom: 2px solid var(--accent);
+}
+
+.tab-panel{ display: none; }
+.tab-panel.active{ display: block; }
+
+.subtabs{
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.subtab{
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--card-border);
+  color: var(--muted);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 100px;
+  cursor: pointer;
+}
+
+.subtab.active{
+  color: var(--ink);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.subtab-panel{ display: none; }
+.subtab-panel.active{ display: block; }
+
+/* ---------- Vouch cards ---------- */
+
+.vouch-list{ display: flex; flex-direction: column; gap: 12px; }
+
+.vouch{
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 18px 20px;
+}
+
+.vouch-text{ margin: 0 0 10px; line-height: 1.55; color: var(--ink); font-size: 0.98rem; }
+
+.vouch-meta{ display: flex; justify-content: space-between; align-items: center; color: var(--muted); font-size: 0.8rem; }
+
+.empty{
+  color: var(--muted);
+  font-size: 0.95rem;
+  padding: 30px 0;
+  text-align: center;
+  border: 1px dashed var(--card-border);
+  border-radius: 14px;
+}
+
+/* ---------- Forms (admin) ---------- */
+
+.panel{
+  max-width: 480px;
+  margin: 90px auto;
+  padding: 0 24px;
+}
+
+.panel-card{
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.panel h2{
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin: 0 0 22px;
+}
+
+label{
+  display: block;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+input[type="password"], input[type="text"], textarea, select{
+  width: 100%;
+  background: #110d09;
+  border: 1px solid var(--card-border);
+  border-radius: 10px;
+  color: var(--ink);
+  padding: 12px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  margin-bottom: 16px;
+}
+
+textarea{ resize: vertical; min-height: 90px; }
+
+select{ appearance: none; cursor: pointer; }
+
+input:focus, textarea:focus, select:focus{ outline: none; border-color: var(--accent); }
+
+.btn{
+  border: none;
+  border-radius: 10px;
+  padding: 12px 20px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+}
+
+.btn-primary{ background: var(--accent); color: #fff; width: 100%; }
+.btn-primary:hover{ background: #c67a2f; }
+
+.btn-ghost{
+  background: none;
+  border: 1px solid var(--card-border);
+  color: var(--muted);
+}
+
+.btn-ghost:hover{ border-color: var(--accent); color: var(--ink); }
+
+.btn-danger{
+  background: none;
+  border: 1px solid rgba(239,122,122,0.3);
+  color: var(--danger);
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  border-radius: 8px;
+}
+
+.btn-danger:hover{ background: rgba(239,122,122,0.08); }
+
+.error-msg{ color: var(--danger); font-size: 0.85rem; margin: -8px 0 16px; }
+
+/* ---------- Admin dashboard ---------- */
+
+.admin-wrap{ max-width: 760px; margin: 0 auto; padding: 60px 24px 100px; }
+
+.admin-head{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 34px;
+}
+
+.admin-head h1{ font-size: 1.9rem; text-align: left; }
+
+.admin-form{
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 26px;
+  margin-bottom: 40px;
+}
+
+.admin-section-title{
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin: 34px 0 14px;
+}
+
+.category-badge{
+  display: inline-block;
+  font-size: 0.72rem;
+  padding: 3px 9px;
+  border-radius: 100px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  margin-right: 8px;
+}
+
+/* ---------- Schematics & videos (public page) ---------- */
+
+.schem-top{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.schem-name{ margin: 0; }
+
+.btn-small{
+  padding: 7px 14px;
+  font-size: 0.82rem;
+  white-space: nowrap;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.schem-desc{
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.video-embed{
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 */
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  background: #000;
+}
+
+.video-embed iframe{
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: 0;
+}
+
+/* ---------- File input (admin) ---------- */
+
+input[type="file"]{
+  width: 100%;
+  background: #110d09;
+  border: 1px dashed var(--card-border);
+  border-radius: 10px;
+  color: var(--muted);
+  padding: 12px 14px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  margin-bottom: 16px;
+}
+
+footer{
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  padding-bottom: 50px;
+}

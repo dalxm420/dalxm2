@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ItzDalxm's site</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+  <section class="hero">
+    <h1>ItzDalxm's <em>vouches</em></h1>
+    <p class="subtitle">Feedback from people I've traded, gambled, or played with — posted here directly, nothing edited.</p>
+    <div class="stats">
+      <span class="stat"><span class="dot"></span> {{ total }} {{ 'vouch' if total == 1 else 'vouches' }}
+    </div>
+  </section>
+
+  <main>
+    <div class="tabs primary-tabs">
+      <button class="tab active" data-level="primary" data-target="vouches">Vouches</button>
+      <button class="tab" data-level="primary" data-target="videos">Videos</button>
+      <button class="tab" data-level="primary" data-target="schematics">Schematics</button>
+    </div>
+
+    <div class="tab-panel active" id="panel-vouches">
+      <div class="subtabs">
+        {% for cat in categories %}
+          <button class="subtab {{ 'active' if loop.first }}" data-level="secondary" data-target="{{ cat.key }}">{{ cat.label }}</button>
+        {% endfor %}
+      </div>
+
+      {% for cat in categories %}
+        <div class="subtab-panel {{ 'active' if loop.first }}" id="subpanel-{{ cat.key }}">
+          <div class="vouch-list">
+            {% for v in data.get(cat.key, []) %}
+              <div class="vouch">
+                <p class="vouch-text">{{ v.text }}</p>
+                <div class="vouch-meta">
+                  <span>{{ v.author }}</span>
+                  <span>{{ v.date }}</span>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+          {% if not data.get(cat.key) %}
+            <div class="empty">No {{ cat.label.lower() }} yet — check back soon.</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="tab-panel" id="panel-videos">
+      <div class="vouch-list">
+        {% for v in data.get('videos', []) %}
+          <div class="vouch video-card">
+            <div class="video-embed">
+              <iframe src="https://www.youtube.com/embed/{{ v.video_id }}" title="{{ v.title }}" frameborder="0" allowfullscreen loading="lazy"></iframe>
+            </div>
+            <p class="vouch-text">{{ v.title }}</p>
+            <div class="vouch-meta">
+              <span>{{ v.author }}</span>
+              <span>{{ v.date }}</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      {% if not data.get('videos') %}
+        <div class="empty">No videos yet — check back soon.</div>
+      {% endif %}
+    </div>
+
+    <div class="tab-panel" id="panel-schematics">
+      <div class="vouch-list">
+        {% for s in data.get('schematics', []) %}
+          <div class="vouch schem-card">
+            <div class="schem-top">
+              <p class="vouch-text schem-name">{{ s.original_name }}</p>
+              <a class="btn btn-ghost btn-small" href="{{ url_for('download_schematic', entry_id=s.id) }}">Download</a>
+            </div>
+            {% if s.description %}
+              <p class="schem-desc">{{ s.description }}</p>
+            {% endif %}
+            <div class="vouch-meta">
+              <span>{{ s.author }} · {{ s.size }}</span>
+              <span>{{ s.date }}</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      {% if not data.get('schematics') %}
+        <div class="empty">No schematics yet — check back soon.</div>
+      {% endif %}
+    </div>
+  </main>
+
+  <footer>ItzDalxm's vouches</footer>
+
+  <script>
+    // Primary tabs: Vouches / Videos / Schematics
+    const primaryTabs = document.querySelectorAll('.tab[data-level="primary"]');
+    const primaryPanels = document.querySelectorAll('.tab-panel');
+
+    primaryTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        primaryTabs.forEach(t => t.classList.remove('active'));
+        primaryPanels.forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('panel-' + tab.dataset.target).classList.add('active');
+      });
+    });
+
+    // Secondary tabs: Gambling / SMP / Vouches, inside the Vouches panel
+    const subTabs = document.querySelectorAll('.subtab[data-level="secondary"]');
+    const subPanels = document.querySelectorAll('.subtab-panel');
+
+    subTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        subTabs.forEach(t => t.classList.remove('active'));
+        subPanels.forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('subpanel-' + tab.dataset.target).classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>
